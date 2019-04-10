@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import io.reactivex.CompletableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import android.os.Bundle;
@@ -22,9 +24,14 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 
+import static com.example.service.util.Constants.DESTINATION;
+import static com.example.service.util.Constants.NAME_TESTUSER1;
+import static com.example.service.util.Constants.NAME_TESTUSER2;
+
 public class LocalSpringActivity extends AppCompatActivity {
     private StompClient mStompClient;
     private ActivityLocalSpringBinding mBinding;
+    private CompositeDisposable compositeDisposable;
     private static String mUri = "ws://10.0.2.2:8080/websocket/websocket";
 
 
@@ -34,7 +41,9 @@ public class LocalSpringActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_local_spring);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
-        mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        resetSubscriptions();
+
+        Disposable dispLifecycle = mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lifecycleEvent -> {
                     switch (lifecycleEvent.getType()) {
                         case OPENED:
@@ -50,8 +59,8 @@ public class LocalSpringActivity extends AppCompatActivity {
                             mBinding.txtConnectionStatus.setText("Closed");
                     }
                 });
-
-        mStompClient.topic("/topic/test")
+        compositeDisposable.add(dispLifecycle);
+        Disposable dispTopic = mStompClient.topic("/topic/test")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -61,12 +70,20 @@ public class LocalSpringActivity extends AppCompatActivity {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
+        compositeDisposable.add(dispTopic);
     }
 
+    @Override
+    protected void onDestroy() {
+        mStompClient.disconnect();
+        if (compositeDisposable != null) compositeDisposable.dispose();
+        super.onDestroy();
+    }
 
     public void onConnect(View view) {
         DLog.write();
         mStompClient.connect();
+        mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
     }
 
     public void onDisconnect(View view) {
@@ -76,10 +93,10 @@ public class LocalSpringActivity extends AppCompatActivity {
     }
 
     public void onSendEchoViaStomp(View view) {
-        SendMessageVm messageVm = new SendMessageVm("FROM USER=" + MixUtil.getTimeFormat().format(new Date()), "admin");
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER1, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        DLog.write("m=" + jsonModel.toString());
-        mStompClient.send("/chat.private.admin", jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2,
+                jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");
@@ -88,7 +105,14 @@ public class LocalSpringActivity extends AppCompatActivity {
                     DLog.write("Error send STOMP message", throwable.getMessage());
                     mBinding.txtMessage.setText("Error send STOMP message");
 
-                });
+                }));
+    }
+
+    private void resetSubscriptions() {
+        if (compositeDisposable != null) {
+            compositeDisposable.dispose();
+        }
+        compositeDisposable = new CompositeDisposable();
     }
 
     private CompletableTransformer applySchedulers() {

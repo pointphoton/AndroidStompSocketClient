@@ -1,4 +1,4 @@
-package com.example.androidstompsocketclient19;
+package com.example.stompclient3;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -11,7 +11,6 @@ import io.reactivex.schedulers.Schedulers;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.androidstompsocketclient19.databinding.ActivityMainBinding;
 import com.example.dlog.DLog;
 import com.example.service.model.SendMessageVm;
 import com.example.service.util.Constants;
@@ -19,6 +18,7 @@ import com.example.service.util.MixUtil;
 import com.example.socket.Stomp;
 import com.example.socket.StompClient;
 import com.example.socket.dto.StompHeader;
+import com.example.stompclient3.databinding.ActivityClientThreeBinding;
 
 import java.util.Date;
 
@@ -27,23 +27,22 @@ import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER1;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
+import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.SERVER_PORT;
-import static com.example.service.util.Constants.TOKEN_USER1;
+import static com.example.service.util.Constants.TOKEN_USER3;
 
-
-public class MainActivity extends AppCompatActivity {
+public class ClientThreeActivity extends AppCompatActivity {
 
     private StompClient mStompClient;
-    private ActivityMainBinding mBinding;
+    private ActivityClientThreeBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER1;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER3;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_client_three);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
         Disposable dispLifecycle = mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -75,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         compositeDisposable.add(dispTopic);
-
     }
+
 
     @Override
     protected void onDestroy() {
@@ -100,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSendEchoViaStomp(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER1, NAME_TESTUSER2);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER1);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER1, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");
@@ -112,17 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     mBinding.txtMessage.setText("Error send STOMP message");
 
                 }));
-        /*
-        mStompClient.send(DESTINATION + NAME_TESTUSER2, jsonModel)
-                .compose(applySchedulers())
-                .subscribe(() -> {
-                    DLog.write("STOMP message send successfully");
-                    mBinding.txtMessage.setText("STOMP message send successfully");
-                }, throwable -> {
-                    DLog.write("Error send STOMP message", throwable.getMessage());
-                    mBinding.txtMessage.setText("Error send STOMP message");
 
-                });*/
     }
 
     private void resetSubscriptions() {
@@ -139,3 +128,4 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }
+

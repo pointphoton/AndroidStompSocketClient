@@ -20,7 +20,7 @@
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Client One"
+                android:text="Client ONE"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -62,6 +62,32 @@
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btnConnect"/>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSendEcho"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:onClick="onSendEchoViaStomp"
+                android:text="Send Stomp Message"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnDisconnect"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:lines="2"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                app:layout_constraintLeft_toRightOf="@+id/btnSendEcho"
+                app:layout_constraintTop_toTopOf="@id/btnSendEcho"
+                />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

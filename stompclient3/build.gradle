@@ -5,12 +5,14 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.stompclient"
+        applicationId "com.example.stompclient3"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -36,6 +38,7 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
@@ -43,13 +46,12 @@ dependencies {
     implementation deps.support.app_compat
     implementation deps.support.annotations
     implementation deps.constraint_layout
-    //implementation deps.rxjava2
     implementation deps.rx_android
+    implementation deps.gson
     implementation deps.okhttp3.runtime
     implementation deps.okhttp3.logging
     implementation project(path: ':socket')
     implementation project(path: ':slog')
     implementation project(path: ':dlog')
     implementation project(path: ':service')
-
 }
