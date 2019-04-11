@@ -30,14 +30,12 @@ import static com.example.service.util.Constants.NAME_TESTUSER1;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
 import static com.example.service.util.Constants.SERVER_PORT;
 
-
 public class MainActivity extends AppCompatActivity implements ClickListener {
 
     private StompClient mStompClient;
     private ActivityMainBinding mBinding;
     private CompositeDisposable compositeDisposable;
     private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + "deneme";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
