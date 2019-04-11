@@ -9,7 +9,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import android.os.Bundle;
-import android.os.Debug;
 import android.view.View;
 
 import com.example.androidstompsocketclient19.databinding.ActivityMainBinding;
