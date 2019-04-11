@@ -3,7 +3,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data/>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="handler"
+            type="com.example.stompclient2.ClickListener"
+            />
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Client TWO"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/holo_orange_dark"
                 android:textSize="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -33,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
-                android:onClick="onConnect"
+                android:onClick="@{handler::onConnect}"
                 android:text="Connect To Server"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -58,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:onClick="onDisconnect"
+                android:onClick="@{handler::onDisconnect}"
                 android:text="Disconnect"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -70,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:onClick="onSendEchoViaStomp"
+                android:onClick="@{handler::onSendMessage}"
                 android:text="Send Stomp Message"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -100,7 +100,7 @@ public class StompClient {
         this.headers = _headers;
 
         if (isConnected()) {
-            DLog.write( "Already connected, ignore");
+            DLog.write("Already connected, ignore");
             return;
         }
         lifecycleDisposable = connectionProvider.lifecycle()
@@ -116,18 +116,17 @@ public class StompClient {
 
                             connectionProvider.send(new StompMessage(StompCommand.CONNECT, headers, null).compile(legacyWhitespace))
                                     .subscribe(() -> {
-                                        DLog.write( "Publish open");
+                                        DLog.write("Publish open");
                                         lifecyclePublishSubject.onNext(lifecycleEvent);
                                     });
                             break;
-
                         case CLOSED:
-                            DLog.write( "Socket closed");
+                            DLog.write("Socket closed");
                             disconnect();
                             break;
 
                         case ERROR:
-                            DLog.write( "Socket closed with error");
+                            DLog.write("Socket closed with error");
                             lifecyclePublishSubject.onNext(lifecycleEvent);
                             break;
                     }
@@ -141,6 +140,7 @@ public class StompClient {
                 .subscribe(stompMessage -> {
                     getConnectionStream().onNext(true);
                 });
+
     }
 
     synchronized private BehaviorSubject<Boolean> getConnectionStream() {
@@ -199,13 +199,13 @@ public class StompClient {
     public void reconnect() {
         disconnectCompletable()
                 .subscribe(() -> connect(headers),
-                        e ->    DLog.write( "Disconnect error", e));
+                        e -> DLog.write("Disconnect error", e));
     }
 
     @SuppressLint("CheckResult")
     public void disconnect() {
         disconnectCompletable().subscribe(() -> {
-        }, e ->    DLog.write("Disconnect error", e));
+        }, e -> DLog.write("Disconnect error", e));
     }
 
     public Completable disconnectCompletable() {
@@ -221,7 +221,7 @@ public class StompClient {
 
         return connectionProvider.disconnect()
                 .doFinally(() -> {
-                    DLog.write( "Stomp disconnected");
+                    DLog.write("Stomp disconnected");
                     getConnectionStream().onComplete();
                     getMessageStream().onComplete();
                     lifecyclePublishSubject.onNext(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
@@ -229,10 +229,12 @@ public class StompClient {
     }
 
     public Flowable<StompMessage> topic(String destinationPath) {
+        DLog.write();
         return topic(destinationPath, null);
     }
 
     public Flowable<StompMessage> topic(@NonNull String destPath, List<StompHeader> headerList) {
+        DLog.write();
         if (destPath == null)
             return Flowable.error(new IllegalArgumentException("Topic path cannot be null"));
         else if (!streamMap.containsKey(destPath))
@@ -253,7 +255,7 @@ public class StompClient {
 
         // Only continue if we don't already have a subscription to the topic
         if (topics.containsKey(destinationPath)) {
-            DLog.write( "Attempted to subscribe to already-subscribed path!");
+            DLog.write("Attempted to subscribe to already-subscribed path!");
             return Completable.complete();
         }
 
@@ -274,7 +276,7 @@ public class StompClient {
         String topicId = topics.get(dest);
         topics.remove(dest);
 
-        DLog.write( "Unsubscribe path: " + dest + " id: " + topicId);
+        DLog.write("Unsubscribe path: " + dest + " id: " + topicId);
 
         return send(new StompMessage(StompCommand.UNSUBSCRIBE,
                 Collections.singletonList(new StompHeader(StompHeader.ID, topicId)), null)).onErrorComplete();

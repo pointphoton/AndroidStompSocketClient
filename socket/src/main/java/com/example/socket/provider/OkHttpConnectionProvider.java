@@ -3,6 +3,7 @@ package com.example.socket.provider;
 import com.example.dlog.DLog;
 import com.example.socket.dto.LifecycleEvent;
 
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,6 +54,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
                 new WebSocketListener() {
                     @Override
                     public void onOpen(WebSocket webSocket, @NonNull Response response) {
+                        DLog.write("onOpen");
                         LifecycleEvent openEvent = new LifecycleEvent(LifecycleEvent.Type.OPENED);
 
                         TreeMap<String, String> headersAsMap = headersAsMap(response);
@@ -82,12 +84,18 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
                     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
                         // in OkHttp, a Failure is equivalent to a JWS-Error *and* a JWS-Close
                         DLog.write("onFailure");
-                        if (response != null) {
+                        if (response != null && response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                             DLog.write("onFailure code=" + response.code() + " " + response.message());
+                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.UNAUTHORIZED, new Exception(t)));
+                            openSocket = null;
+                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
+
+                        } else {
+                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
+                            openSocket = null;
+                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
                         }
-                        emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
-                        openSocket = null;
-                        emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
+
                     }
 
                     @Override

@@ -1,4 +1,4 @@
-package com.example.stompclient;
+package com.example.stompclient2;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -18,6 +18,7 @@ import com.example.service.util.MixUtil;
 import com.example.socket.Stomp;
 import com.example.socket.StompClient;
 import com.example.socket.dto.StompHeader;
+import com.example.stompclient.R;
 import com.example.stompclient.databinding.ClientTwoBinding;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ import static com.example.service.util.Constants.NAME_TESTUSER2;
 import static com.example.service.util.Constants.SERVER_PORT;
 import static com.example.service.util.Constants.TOKEN_USER2;
 
-public class ClientTwoActivity extends AppCompatActivity {
+public class ClientTwoActivity extends AppCompatActivity implements ClickListener{
 
     private StompClient mStompClient;
     private ClientTwoBinding mBinding;
@@ -42,6 +43,7 @@ public class ClientTwoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.client_two);
+        mBinding.setHandler(this);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
         Disposable dispLifecycle = mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -94,7 +96,8 @@ public class ClientTwoActivity extends AppCompatActivity {
         mBinding.txtConnectionStatus.setText("Disconnect");
     }
 
-    public void onSendEchoViaStomp(View view) {
+    @Override
+    public void onSendMessage(View view) {
         DLog.write();
         SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER2, NAME_TESTUSER1);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
@@ -108,8 +111,8 @@ public class ClientTwoActivity extends AppCompatActivity {
                     mBinding.txtMessage.setText("Error send STOMP message");
 
                 }));
-
     }
+
 
     private void resetSubscriptions() {
         if (compositeDisposable != null) {

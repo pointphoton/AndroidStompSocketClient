@@ -26,23 +26,23 @@ import static com.example.service.util.Constants.DESTINATION;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER1;
-import static com.example.service.util.Constants.NAME_TESTUSER2;
-import static com.example.service.util.Constants.NAME_TESTUSER3;
+import static com.example.service.util.Constants.NAME_TESTUSER399;
 import static com.example.service.util.Constants.SERVER_PORT;
-import static com.example.service.util.Constants.TOKEN_USER3;
+import static com.example.service.util.Constants.TOKEN_USER399;
 
-public class ClientThreeActivity extends AppCompatActivity {
+public class ClientThreeActivity extends AppCompatActivity implements ClickListener {
 
     private StompClient mStompClient;
     private ActivityClientThreeBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER3;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER399;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_client_three);
+        mBinding.setHandler(this);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
         Disposable dispLifecycle = mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -97,9 +97,9 @@ public class ClientThreeActivity extends AppCompatActivity {
         mBinding.txtConnectionStatus.setText("Disconnect");
     }
 
-    public void onSendEchoViaStomp(View view) {
+    public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER1);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER399, NAME_TESTUSER1);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
         compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER1, jsonModel)
                 .compose(applySchedulers())

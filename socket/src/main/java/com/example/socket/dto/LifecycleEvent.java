@@ -7,7 +7,7 @@ import java.util.TreeMap;
 public class LifecycleEvent {
 
     public enum Type {
-        OPENED, CLOSED, ERROR, FAILED_SERVER_HEARTBEAT
+        OPENED, CLOSED, ERROR, FAILED_SERVER_HEARTBEAT,UNAUTHORIZED
     }
 
     private final Type mType;

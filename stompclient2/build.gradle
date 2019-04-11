@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.stompclient"
+        applicationId "com.example.stompclient2"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -26,6 +26,7 @@ android {
         sourceCompatibility '1.8' //1.8
         targetCompatibility '1.8' //1.8
     }
+
     dataBinding {
         enabled = true
     }

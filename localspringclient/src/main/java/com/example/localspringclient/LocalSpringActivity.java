@@ -9,23 +9,20 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.view.View;
 
 import com.example.dlog.DLog;
 import com.example.localspringclient.databinding.ActivityLocalSpringBinding;
 import com.example.service.model.SendMessageVm;
-import com.example.service.util.Constants;
 import com.example.service.util.MixUtil;
 import com.example.socket.Stomp;
 import com.example.socket.StompClient;
 import com.example.socket.dto.StompHeader;
-import com.google.gson.Gson;
 
 import java.util.Date;
 
 import static com.example.service.util.Constants.DESTINATION;
-import static com.example.service.util.Constants.NAME_TESTUSER1;
+import static com.example.service.util.Constants.NAME_TESTUSERALPHA;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
 
 public class LocalSpringActivity extends AppCompatActivity {
@@ -93,7 +90,7 @@ public class LocalSpringActivity extends AppCompatActivity {
     }
 
     public void onSendEchoViaStomp(View view) {
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER1, NAME_TESTUSER2);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSERALPHA, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
         compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2,
                 jsonModel)

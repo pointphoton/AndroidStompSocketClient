@@ -3,7 +3,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data/>
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="handler"
+            type="com.example.stompclient3.ClickListener"
+            />
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
-                android:onClick="onConnect"
+                android:onClick="@{handler::onConnect}"
                 android:text="Connect To Server"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -57,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:onClick="onDisconnect"
+                android:onClick="@{handler::onDisconnect}"
                 android:text="Disconnect"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -69,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:onClick="onSendEchoViaStomp"
+                android:onClick="@{handler::onSendMessage}"
                 android:text="Send Stomp Message"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -10,21 +10,13 @@ public interface Constants {
     public static final String ENDPOINT = "/websocket/websocket/?access_token=";
     public static final String SUBSCRIBE = "/user/exchange/amq.direct/chat.message";
     public static final String DESTINATION = "/chat.private.";
-    public static final String SEND_USER1 = "/chat.private.testuser1";
-    public static final String SEND_USER2 = "/chat.private.testuser2";
-
-    public static final String NAME_USER1 = "testuser1";
-    public static final String NAME_USER2 = "testuser2";
 
 
-    public static final String TOKEN_USER1 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3Mjg3ODkzfQ" +
-            ".TYuW5zEz-_ckg_f6V15Y06tmWKM5RYnjJlw80JuEm7DBkCvbvHRDxkfx0c0GqNhHHIrfTMEhbCTixHbaF0T_-A";
+    public static final String TOKEN_USER1 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MTg2fQ.CRLEL9SHIqCQdkvBhAF0p-GL88VFgLKkrTLr-ra8BJ9mHbKgmak0iFYY5HofmxZyridjjrCv4aR4lv-1ywWXMQ";
 
-    public static final String TOKEN_USER2 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3Mjg3OTE0fQ" +
-            ".DT2F5DTlsM2FMNahhm1yEFmEtkTqtYqVZHpumAcfjLoy9VxAd-TtGdap51NkApaE77JwzG6D59F2s4KF3W-NbQ";
+    public static final String TOKEN_USER2 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MzU2fQ.h26WcumCUm_v40sONC1Cwg2QQJw98cHrPe5zhOvG01LWLKbdWLU-U4cAjVi1oriJyD5rejzt-YDFrpnkTuiEjA";
 
-    public static final String TOKEN_USER3 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3Mjg3OTE0fQ" +
-            ".DT2F5DTlsM2FMNahhm1yEFmEtkTqtYqVZHpumAcfjLoy9VxAd-TtGdap51NkApaE77JwzG6D59F2s4KF3W-NbQ";
+    public static final String TOKEN_USER399 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjM5OSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE1NTc1NDg0MDd9.Jwly_9ZkkUG3oSZkLV1Y6Oc-7VuQ3U7hB2FBCWYH_tONonA9s20bkuAnGgvAyQx2tJQP9wV6bZZjDHwr3pU3vA";
 
 
     public static final String LOCAL_HOST = "127.0.0.1";
@@ -36,5 +28,5 @@ public interface Constants {
 
     public static final String NAME_TESTUSER1 = "testuser1";
     public static final String NAME_TESTUSER2 = "testuser2";
-    public static final String NAME_TESTUSER3 = "testuser3";
+    public static final String NAME_TESTUSER399 = "testuser399";
 }

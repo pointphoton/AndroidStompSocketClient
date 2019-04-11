@@ -170,7 +170,7 @@ public class HeartBeatTask {
      */
     private void scheduleClientHeartBeat() {
         if (clientHeartbeat > 0 && scheduler != null) {
-            DLog.write("Scheduling client heart-beat to be sent in " + clientHeartbeat + " ms");
+        //    DLog.write("Scheduling client heart-beat to be sent in " + clientHeartbeat + " ms");
             clientSendHeartBeatTask = scheduler.scheduleDirect(() ->
                     sendClientHeartBeat(), clientHeartbeat, TimeUnit.MILLISECONDS);
         }
@@ -181,7 +181,7 @@ public class HeartBeatTask {
      */
     private void sendClientHeartBeat() {
         sendCallback.sendClientHeartBeat("\r\n");
-        DLog.write("PING >>>");
+//        DLog.write("PING >>>");
         //schedule next client heart beat
         this.scheduleClientHeartBeat();
     }
