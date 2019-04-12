@@ -25,9 +25,10 @@ import java.util.Date;
 import static com.example.service.util.Constants.DESTINATION;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
-import static com.example.service.util.Constants.NAME_TESTUSER1;
+import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER399;
 import static com.example.service.util.Constants.SERVER_PORT;
+import static com.example.service.util.Constants.TOKEN_USER300;
 import static com.example.service.util.Constants.TOKEN_USER399;
 
 public class ClientThreeActivity extends AppCompatActivity implements ClickListener {
@@ -35,7 +36,7 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
     private StompClient mStompClient;
     private ActivityClientThreeBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER399;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER300;
 
 
     @Override
@@ -99,9 +100,9 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
 
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER399, NAME_TESTUSER1);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER399, NAME_TESTUSER3);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER1, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER3, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");

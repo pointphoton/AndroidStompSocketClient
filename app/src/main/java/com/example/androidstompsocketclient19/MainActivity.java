@@ -25,16 +25,17 @@ import java.util.Date;
 import static com.example.service.util.Constants.DESTINATION;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
-import static com.example.service.util.Constants.NAME_TESTUSER1;
+import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
 import static com.example.service.util.Constants.SERVER_PORT;
+import static com.example.service.util.Constants.TOKEN_USER3;
 
 public class MainActivity extends AppCompatActivity implements ClickListener {
 
     private StompClient mStompClient;
     private ActivityMainBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + "deneme";
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER1, NAME_TESTUSER2);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
         compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2, jsonModel)
                 .compose(applySchedulers())
