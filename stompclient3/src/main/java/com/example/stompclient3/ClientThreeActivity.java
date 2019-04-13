@@ -26,10 +26,9 @@ import static com.example.service.util.Constants.DESTINATION;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER3;
-import static com.example.service.util.Constants.NAME_TESTUSER399;
+import static com.example.service.util.Constants.NAME_TESTUSER300;
 import static com.example.service.util.Constants.SERVER_PORT;
 import static com.example.service.util.Constants.TOKEN_USER300;
-import static com.example.service.util.Constants.TOKEN_USER399;
 
 public class ClientThreeActivity extends AppCompatActivity implements ClickListener {
 
@@ -100,7 +99,7 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
 
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER399, NAME_TESTUSER3);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER300, NAME_TESTUSER3);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
         compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER3, jsonModel)
                 .compose(applySchedulers())

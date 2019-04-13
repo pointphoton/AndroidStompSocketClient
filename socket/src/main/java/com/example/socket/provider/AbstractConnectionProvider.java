@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.functions.Action;
 import io.reactivex.subjects.PublishSubject;
 
 public abstract class AbstractConnectionProvider implements ConnectionProvider {
@@ -44,8 +45,13 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
     }
 
     private Completable initSocket() {
-        return Completable
-                .fromAction(this::createWebSocketConnection);
+        //return Completable.fromAction(this::createWebSocketConnection);
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                createWebSocketConnection();
+            }
+        });
     }
 
     /**
@@ -54,6 +60,8 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
      * See implementations in OkHttpConnectionProvider and WebSocketsConnectionProvider.
      */
     protected abstract void createWebSocketConnection();
+
+   // protected abstract void hello();
 
     @NonNull
     @Override
