@@ -9,7 +9,9 @@ public interface Constants {
 
     public static final String ENDPOINT = "/websocket/websocket/?access_token=";
     public static final String SUBSCRIBE = "/user/exchange/amq.direct/chat.message";
-    public static final String DESTINATION = "/chat.private.";
+    public static final String DESTINATION_CHAT = "/chat.private.";
+    public static final String DESTINATION_READ = "/chat.messageReaded.information";
+
 
 
     public static final String TOKEN_USER1 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MTg2fQ" +

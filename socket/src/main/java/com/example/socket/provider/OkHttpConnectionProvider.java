@@ -31,6 +31,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
 
     public OkHttpConnectionProvider(String uri, @Nullable Map<String, String> connectHttpHeaders, OkHttpClient okHttpClient) {
         super();
+        DLog.write();
         mUri = uri;
         mConnectHttpHeaders = connectHttpHeaders != null ? connectHttpHeaders : new HashMap<>();
         mOkHttpClient = okHttpClient;
@@ -45,6 +46,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
 
     @Override
     protected void createWebSocketConnection() {
+        DLog.write("createWebSocketConnection");
         Request.Builder requestBuilder = new Request.Builder()
                 .url(mUri);
 
@@ -87,14 +89,11 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
                         if (response != null && response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                             DLog.write("onFailure code=" + response.code() + " " + response.message());
                             emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.UNAUTHORIZED, new Exception(t)));
-                            openSocket = null;
-                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
-
                         } else {
-                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
-                            openSocket = null;
-                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
+                           emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
                         }
+                        openSocket = null;
+                        emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
 
                     }
 

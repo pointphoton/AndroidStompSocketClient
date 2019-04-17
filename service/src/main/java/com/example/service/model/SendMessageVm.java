@@ -11,11 +11,20 @@ public class SendMessageVm {
 
     String messageUuid;
 
+    String testSessionId;
+
     public SendMessageVm(){}
 
     public SendMessageVm(String message, String targetUsername){
         this.message=message;
         this.targetUsername=targetUsername;
+        this.messageUuid= UUID.randomUUID().toString();
+    }
+
+    public SendMessageVm(String message, String targetUsername,String testSessionId){
+        this.message=message;
+        this.targetUsername=targetUsername;
+        this.testSessionId=testSessionId;
         this.messageUuid= UUID.randomUUID().toString();
     }
 

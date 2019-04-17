@@ -1,4 +1,4 @@
-package com.example.stompclient2;
+package com.example.localspringclient2;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -12,42 +12,37 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.dlog.DLog;
-import com.example.service.model.ReadInfo;
-import com.example.service.model.ReceivedMessage;
+import com.example.localspringclient2.databinding.ActivityLocalClient2Binding;
 import com.example.service.model.SendMessageVm;
-import com.example.service.util.Constants;
 import com.example.service.util.MixUtil;
 import com.example.socket.Stomp;
 import com.example.socket.StompClient;
 import com.example.socket.dto.StompHeader;
-import com.example.stompclient.R;
-import com.example.stompclient.databinding.ClientTwoBinding;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import static com.example.service.util.Constants.DESTINATION_CHAT;
-import static com.example.service.util.Constants.ENDPOINT;
-import static com.example.service.util.Constants.HOST_LOCAL;
-import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
-import static com.example.service.util.Constants.SERVER_PORT;
-import static com.example.service.util.Constants.TOKEN_USER2;
+import static com.example.service.util.Constants.NAME_TESTUSER3;
 
-public class ClientTwoActivity extends AppCompatActivity implements ClickListener {
+public class LocalClient2 extends AppCompatActivity implements ClickListener {
 
     private StompClient mStompClient;
-    private ClientTwoBinding mBinding;
+    private ActivityLocalClient2Binding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER2;
+    private static String mUri = "ws://10.0.2.2:8080/jangle/websocket";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
-                this, R.layout.client_two);
+                this, R.layout.activity_local_client2);
         mBinding.setHandler(this);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
+
         resetSubscriptions();
+
         Disposable dispLifecycle = mStompClient.lifecycle().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lifecycleEvent -> {
                     switch (lifecycleEvent.getType()) {
@@ -64,10 +59,9 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                             mBinding.txtConnectionStatus.setText("Closed");
                     }
                 });
-
         compositeDisposable.add(dispLifecycle);
-
     }
+
 
     @Override
     protected void onDestroy() {
@@ -78,7 +72,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
 
     public void onConnect(View view) {
         DLog.write();
-        Disposable dispTopic = mStompClient.topic("/user/exchange/amq.direct/chat.message")
+        Disposable dispError = mStompClient.topic("/user/queue/errors")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -87,28 +81,45 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                     for (StompHeader sh : topicMessage.getStompHeaders()) {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
-                    String json = topicMessage.getPayload();
-                    ReceivedMessage rm = MixUtil.getGson().fromJson(json, ReceivedMessage.class);
-                    if (rm.isSuccess() && rm.getErrorCode() == 0) {
-                        //todo should add to which user we are speaking
-                        ReadInfo ri=new ReadInfo(rm.getMessageUuid(),null);
-                        String jsonModel = MixUtil.getGson().toJson(ri, ReadInfo.class);
-                        /*
-                        compositeDisposable.add(mStompClient.send(DESTINATION_READ, jsonModel)
-                                .compose(applySchedulers())
-                                .subscribe(() -> {
-                                    DLog.write("STOMP - READ message send successfully");
-                                }, throwable -> {
-                                    DLog.write("Error send STOMP - READ message", throwable.getMessage());
-
-                                }));*/
-
+                });
+        List<StompHeader> list = new ArrayList<>();
+        list.add(new StompHeader("user", "deneme-user"));
+        Disposable dispTopic = mStompClient.topic("/user/queue/reply", list)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
+          /*
+        Disposable dispTopic = mStompClient.topic("/user/testuser2/queue")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });*/
+        /*
+        Disposable dispTopic = mStompClient.topic("/topic/messages")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });*/
+        compositeDisposable.add(dispError);
         compositeDisposable.add(dispTopic);
-        mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
         mStompClient.connect();
-
+        mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
     }
 
     public void onDisconnect(View view) {
@@ -120,9 +131,11 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER2, NAME_TESTUSER3);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2,
+                "741E4936D57544159AB7EF84A1B3BCF3");
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER3, jsonModel)
+        compositeDisposable.add(mStompClient.send("/app/message"+".testuser2",
+                jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");
@@ -132,6 +145,18 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                     mBinding.txtMessage.setText("Error send STOMP message");
 
                 }));
+        /*
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER2,
+                jsonModel)
+                .compose(applySchedulers())
+                .subscribe(() -> {
+                    DLog.write("STOMP message send successfully");
+                    mBinding.txtMessage.setText("STOMP message send successfully");
+                }, throwable -> {
+                    DLog.write("Error send STOMP message", throwable.getMessage());
+                    mBinding.txtMessage.setText("Error send STOMP message");
+
+                }));*/
     }
 
 

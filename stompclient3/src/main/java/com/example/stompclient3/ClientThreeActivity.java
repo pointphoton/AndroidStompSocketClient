@@ -22,7 +22,7 @@ import com.example.stompclient3.databinding.ActivityClientThreeBinding;
 
 import java.util.Date;
 
-import static com.example.service.util.Constants.DESTINATION;
+import static com.example.service.util.Constants.DESTINATION_CHAT;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER3;
@@ -87,8 +87,8 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
 
     public void onConnect(View view) {
         DLog.write();
-        mStompClient.connect();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
+        mStompClient.connect();
     }
 
     public void onDisconnect(View view) {
@@ -101,7 +101,7 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
         DLog.write();
         SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER300, NAME_TESTUSER3);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER3, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER3, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");

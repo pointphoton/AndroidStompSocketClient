@@ -7,6 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import rx.Subscriber;
 
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.example.socket.dto.StompHeader;
 
 import java.util.Date;
 
-import static com.example.service.util.Constants.DESTINATION;
+import static com.example.service.util.Constants.DESTINATION_CHAT;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER3;
@@ -67,8 +68,19 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 });
 
         compositeDisposable.add(dispLifecycle);
+    }
 
-        Disposable dispTopic = mStompClient.topic(Constants.SUBSCRIBE)
+    @Override
+    protected void onDestroy() {
+        mStompClient.disconnect();
+        if (compositeDisposable != null) compositeDisposable.dispose();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onConnect(View view) {
+        DLog.write();
+        Disposable dispTopic = mStompClient.topic("/user/exchange/amq.direct/chat.message")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> {
@@ -82,22 +94,9 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                     }
                 });
         compositeDisposable.add(dispTopic);
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        mStompClient.disconnect();
-        if (compositeDisposable != null) compositeDisposable.dispose();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onConnect(View view) {
-        DLog.write();
-        mStompClient.connect();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
+        mStompClient.connect();
+
     }
 
     @Override
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
         DLog.write();
         SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER2, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");

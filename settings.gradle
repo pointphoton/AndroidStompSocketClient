@@ -1,1 +1,1 @@
-include ':app', ':slog', ':socket', ':dlog', ':stompclient2', ':service', ':localspringclient', ':stompclient3'
+include ':app', ':slog', ':socket', ':dlog', ':stompclient2', ':service', ':localspringclient', ':stompclient3', ':localspringclient2'

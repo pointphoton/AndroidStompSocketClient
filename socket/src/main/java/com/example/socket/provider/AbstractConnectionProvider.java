@@ -18,6 +18,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
     private final PublishSubject<String> messagesStream;
 
     public AbstractConnectionProvider() {
+        DLog.write();
         lifecycleStream = PublishSubject.create();
         messagesStream = PublishSubject.create();
     }
@@ -25,6 +26,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
     @NonNull
     @Override
     public Observable<String> messages() {
+        DLog.write();
         return messagesStream.startWith(initSocket().toObservable());
     }
 
@@ -45,6 +47,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
     }
 
     private Completable initSocket() {
+        DLog.write();
         //return Completable.fromAction(this::createWebSocketConnection);
         return Completable.fromAction(new Action() {
             @Override

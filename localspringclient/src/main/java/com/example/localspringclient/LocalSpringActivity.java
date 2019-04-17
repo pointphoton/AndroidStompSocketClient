@@ -21,15 +21,15 @@ import com.example.socket.dto.StompHeader;
 
 import java.util.Date;
 
-import static com.example.service.util.Constants.DESTINATION;
-import static com.example.service.util.Constants.NAME_TESTUSERALPHA;
+import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
 
-public class LocalSpringActivity extends AppCompatActivity {
+public class LocalSpringActivity extends AppCompatActivity implements ClickListener {
     private StompClient mStompClient;
     private ActivityLocalSpringBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = "ws://10.0.2.2:8080/websocket/websocket";
+  //  private static String mUri = "ws://10.0.2.2:8080/chat/websocket";
+    private static String mUri = "ws://10.0.2.2:8080/jangle/websocket";
 
 
     @Override
@@ -37,6 +37,7 @@ public class LocalSpringActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_local_spring);
+        mBinding.setHandler(this);
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
 
@@ -57,17 +58,7 @@ public class LocalSpringActivity extends AppCompatActivity {
                     }
                 });
         compositeDisposable.add(dispLifecycle);
-        Disposable dispTopic = mStompClient.topic("/topic/test")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(topicMessage -> {
-                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
-                    DLog.write("Received= " + topicMessage.getPayload());
-                    for (StompHeader sh : topicMessage.getStompHeaders()) {
-                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
-                    }
-                });
-        compositeDisposable.add(dispTopic);
+
     }
 
     @Override
@@ -79,6 +70,52 @@ public class LocalSpringActivity extends AppCompatActivity {
 
     public void onConnect(View view) {
         DLog.write();
+        Disposable dispError = mStompClient.topic("/user/queue/errors")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });
+        Disposable dispTopic = mStompClient.topic("/user/queue/reply")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });
+        /*
+        Disposable dispTopic = mStompClient.topic("/user/testuser3/queue")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });
+                */
+        /*
+        Disposable dispTopic = mStompClient.topic("/topic/messages")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });
+                */
+        compositeDisposable.add(dispError);
+        compositeDisposable.add(dispTopic);
         mStompClient.connect();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
     }
@@ -89,10 +126,13 @@ public class LocalSpringActivity extends AppCompatActivity {
         mBinding.txtConnectionStatus.setText("Disconnect");
     }
 
-    public void onSendEchoViaStomp(View view) {
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSERALPHA, NAME_TESTUSER2);
+
+    @Override
+    public void onSendMessage(View view) {
+        DLog.write();
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION + NAME_TESTUSER2,
+        compositeDisposable.add(mStompClient.send("/app/message"+".testuser2",
                 jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
@@ -103,7 +143,20 @@ public class LocalSpringActivity extends AppCompatActivity {
                     mBinding.txtMessage.setText("Error send STOMP message");
 
                 }));
+        /*
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER2,
+                jsonModel)
+                .compose(applySchedulers())
+                .subscribe(() -> {
+                    DLog.write("STOMP message send successfully");
+                    mBinding.txtMessage.setText("STOMP message send successfully");
+                }, throwable -> {
+                    DLog.write("Error send STOMP message", throwable.getMessage());
+                    mBinding.txtMessage.setText("Error send STOMP message");
+
+                }));*/
     }
+
 
     private void resetSubscriptions() {
         if (compositeDisposable != null) {

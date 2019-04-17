@@ -7,13 +7,13 @@
         <import type="android.view.View"/>
         <variable
             name="handler"
-            type="com.example.localspringclient.ClickListener"/>
+            type="com.example.localspringclient2.ClickListener"/>
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark"
+        android:background="@android:color/holo_purple"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Client LOCAL"
+                android:text="Client LOCAL 2"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
