@@ -19,7 +19,9 @@ import com.example.socket.Stomp;
 import com.example.socket.StompClient;
 import com.example.socket.dto.StompHeader;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
@@ -28,8 +30,8 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
     private StompClient mStompClient;
     private ActivityLocalSpringBinding mBinding;
     private CompositeDisposable compositeDisposable;
-  //  private static String mUri = "ws://10.0.2.2:8080/chat/websocket";
-    private static String mUri = "ws://10.0.2.2:8080/jangle/websocket";
+    private static String mUri = "ws://10.0.2.2:8080/secured/room/websocket";
+   // private static String mUri = "ws://10.0.2.2:8080/jangle/websocket";
 
 
     @Override
@@ -69,8 +71,8 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
     }
 
     public void onConnect(View view) {
-        DLog.write();
-        Disposable dispError = mStompClient.topic("/user/queue/errors")
+        DLog.write();/*
+        Disposable dispError = mStompClient.topic("/user/testuser2/queue/errors")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -80,7 +82,7 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
-        Disposable dispTopic = mStompClient.topic("/user/queue/reply")
+        Disposable dispTopic = mStompClient.topic("/app/user/testuser2/queue/reply")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -90,8 +92,10 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
-        /*
-        Disposable dispTopic = mStompClient.topic("/user/testuser3/queue")
+        */
+        List<StompHeader> list = new ArrayList<>();
+        list.add(new StompHeader("user", "testuser3"));
+        Disposable dispTopic = mStompClient.topic("/secured/user/queue/specific-user-testuser2" ,list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -101,7 +105,7 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
-                */
+
         /*
         Disposable dispTopic = mStompClient.topic("/topic/messages")
                 .subscribeOn(Schedulers.io())
@@ -114,7 +118,7 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
                     }
                 });
                 */
-        compositeDisposable.add(dispError);
+        //compositeDisposable.add(dispError);
         compositeDisposable.add(dispTopic);
         mStompClient.connect();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
@@ -132,7 +136,7 @@ public class LocalSpringActivity extends AppCompatActivity implements ClickListe
         DLog.write();
         SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send("/app/message"+".testuser2",
+        compositeDisposable.add(mStompClient.send("/app/secured/room",
                 jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {

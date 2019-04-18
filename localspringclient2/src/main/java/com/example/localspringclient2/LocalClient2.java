@@ -31,7 +31,7 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
     private StompClient mStompClient;
     private ActivityLocalClient2Binding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = "ws://10.0.2.2:8080/jangle/websocket";
+    private static String mUri = "ws://10.0.2.2:8080/secured/room/websocket";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,8 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
 
     public void onConnect(View view) {
         DLog.write();
-        Disposable dispError = mStompClient.topic("/user/queue/errors")
+        /*
+        Disposable dispError = mStompClient.topic("/user/testuser2/queue/errors")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -82,9 +83,21 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
+
+        Disposable dispTopic = mStompClient.topic("/app/user/testuser2/queue/reply")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(topicMessage -> {
+                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
+                    DLog.write("Received= " + topicMessage.getPayload());
+                    for (StompHeader sh : topicMessage.getStompHeaders()) {
+                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
+                    }
+                });
+          */
         List<StompHeader> list = new ArrayList<>();
-        list.add(new StompHeader("user", "deneme-user"));
-        Disposable dispTopic = mStompClient.topic("/user/queue/reply", list)
+        list.add(new StompHeader("user", "testuser2"));
+        Disposable dispTopic = mStompClient.topic("/secured/user/queue/specific-user-testuser3" ,list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
@@ -94,17 +107,6 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });
-          /*
-        Disposable dispTopic = mStompClient.topic("/user/testuser2/queue")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(topicMessage -> {
-                    DLog.write("StompCommand= " + topicMessage.getStompCommand());
-                    DLog.write("Received= " + topicMessage.getPayload());
-                    for (StompHeader sh : topicMessage.getStompHeaders()) {
-                        DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
-                    }
-                });*/
         /*
         Disposable dispTopic = mStompClient.topic("/topic/messages")
                 .subscribeOn(Schedulers.io())
@@ -116,7 +118,7 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
                     }
                 });*/
-        compositeDisposable.add(dispError);
+       // compositeDisposable.add(dispError);
         compositeDisposable.add(dispTopic);
         mStompClient.connect();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
@@ -131,10 +133,10 @@ public class LocalClient2 extends AppCompatActivity implements ClickListener {
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER3, NAME_TESTUSER2,
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER2, NAME_TESTUSER3,
                 "741E4936D57544159AB7EF84A1B3BCF3");
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send("/app/message"+".testuser2",
+        compositeDisposable.add(mStompClient.send("/app/secured/room",
                 jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {

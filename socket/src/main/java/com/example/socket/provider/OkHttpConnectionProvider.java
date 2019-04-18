@@ -16,6 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import okhttp3.logging.HttpLoggingInterceptor;
 import okio.ByteString;
 
 public class OkHttpConnectionProvider extends AbstractConnectionProvider {
@@ -26,6 +27,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
     private final Map<String, String> mConnectHttpHeaders;
     private final OkHttpClient mOkHttpClient;
 
+
     @Nullable
     private WebSocket openSocket;
 
@@ -35,6 +37,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
         mUri = uri;
         mConnectHttpHeaders = connectHttpHeaders != null ? connectHttpHeaders : new HashMap<>();
         mOkHttpClient = okHttpClient;
+
     }
 
     @Override

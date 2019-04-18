@@ -26,6 +26,7 @@ import com.example.stompclient.databinding.ClientTwoBinding;
 import java.util.Date;
 
 import static com.example.service.util.Constants.DESTINATION_CHAT;
+import static com.example.service.util.Constants.DESTINATION_READ;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER3;
@@ -91,9 +92,9 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                     ReceivedMessage rm = MixUtil.getGson().fromJson(json, ReceivedMessage.class);
                     if (rm.isSuccess() && rm.getErrorCode() == 0) {
                         //todo should add to which user we are speaking
-                        ReadInfo ri=new ReadInfo(rm.getMessageUuid(),null);
+                        ReadInfo ri=new ReadInfo(rm.getMessageUuid(),"");
                         String jsonModel = MixUtil.getGson().toJson(ri, ReadInfo.class);
-                        /*
+
                         compositeDisposable.add(mStompClient.send(DESTINATION_READ, jsonModel)
                                 .compose(applySchedulers())
                                 .subscribe(() -> {
@@ -101,7 +102,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                                 }, throwable -> {
                                     DLog.write("Error send STOMP - READ message", throwable.getMessage());
 
-                                }));*/
+                                }));
 
                     }
                 });

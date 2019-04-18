@@ -8,6 +8,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class Stomp {
 
@@ -38,7 +39,8 @@ public class Stomp {
      * @param okHttpClient       Existing client that will be used to open the WebSocket connection, may be null to use default client
      * @return StompClient for receiving and sending messages. Call #StompClient.connect
      */
-    public static StompClient over(@NonNull ConnectionProvider connectionProvider, String uri, @Nullable Map<String, String> connectHttpHeaders, @Nullable OkHttpClient okHttpClient) {
+    public static StompClient over(@NonNull ConnectionProvider connectionProvider, String uri, @Nullable Map<String, String> connectHttpHeaders,
+                                   @Nullable OkHttpClient okHttpClient) {
         if (connectionProvider == ConnectionProvider.JWS) {
             if (okHttpClient != null) {
                 throw new IllegalArgumentException("You cannot pass an OkHttpClient when using JWS. Use null instead.");
@@ -47,7 +49,12 @@ public class Stomp {
         }
 
         if (connectionProvider == ConnectionProvider.OKHTTP) {
-            return createStompClient(new OkHttpConnectionProvider(uri, connectHttpHeaders, (okHttpClient == null) ? new OkHttpClient() : okHttpClient));
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor).build();
+            return createStompClient(new OkHttpConnectionProvider(uri, connectHttpHeaders, (okHttpClient == null) ? client :
+                    okHttpClient));
         }
 
         throw new IllegalArgumentException("ConnectionProvider type not supported: " + connectionProvider.toString());

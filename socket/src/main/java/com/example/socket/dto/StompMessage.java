@@ -1,5 +1,7 @@
 package com.example.socket.dto;
 
+import com.example.dlog.DLog;
+
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,7 @@ public class StompMessage {
             if (legacyWhitespace) builder.append("\n\n");
         }
         builder.append(TERMINATE_MESSAGE_SYMBOL);
+        DLog.write("Created message= \n"+builder.toString());
         return builder.toString();
     }
 
