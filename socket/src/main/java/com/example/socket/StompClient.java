@@ -25,6 +25,7 @@ import io.reactivex.Completable;
 import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
@@ -106,9 +107,11 @@ public class StompClient {
         }
         lifecycleDisposable = connectionProvider.lifecycle()
                 .subscribe(lifecycleEvent -> {
+                    DLog.write("connect subscribeOn : " + Thread.currentThread().getName());
                     switch (lifecycleEvent.getType()) {
                         case OPENED:
                             DLog.write("Socket Opened");
+
                             List<StompHeader> headers = new ArrayList<>();
                             headers.add(new StompHeader(StompHeader.VERSION, SUPPORTED_VERSIONS));
                             headers.add(new StompHeader(StompHeader.HEART_BEAT,
@@ -135,6 +138,7 @@ public class StompClient {
                 });
 
         messagesDisposable = connectionProvider.messages()
+                .subscribeOn(Schedulers.io())
                 .map(StompMessage::from)
                 .filter(heartBeatTask::consumeHeartBeat)
                 .doOnNext(getMessageStream()::onNext)
@@ -210,10 +214,8 @@ public class StompClient {
         }, e -> DLog.write("Disconnect error", e));
     }
 
-    public Completable disconnectCompletable() {
-
+    private Completable disconnectCompletable() {
         heartBeatTask.shutdown();
-
         if (lifecycleDisposable != null) {
             lifecycleDisposable.dispose();
         }

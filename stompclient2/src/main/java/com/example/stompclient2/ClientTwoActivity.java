@@ -31,15 +31,17 @@ import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
 import static com.example.service.util.Constants.NAME_TESTUSER3;
 import static com.example.service.util.Constants.NAME_TESTUSER2;
+import static com.example.service.util.Constants.NAME_TESTUSER4;
+import static com.example.service.util.Constants.NAME_TESTUSER5;
 import static com.example.service.util.Constants.SERVER_PORT;
-import static com.example.service.util.Constants.TOKEN_USER2;
+import static com.example.service.util.Constants.TOKEN_USER5;
 
 public class ClientTwoActivity extends AppCompatActivity implements ClickListener {
 
     private StompClient mStompClient;
     private ClientTwoBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER2;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +123,9 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER2, NAME_TESTUSER3);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER4, NAME_TESTUSER5);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER3, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER5, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");

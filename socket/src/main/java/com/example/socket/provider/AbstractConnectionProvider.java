@@ -1,5 +1,7 @@
 package com.example.socket.provider;
 
+import android.os.Looper;
+
 import com.example.dlog.DLog;
 import com.example.socket.dto.LifecycleEvent;
 
@@ -52,6 +54,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
+                DLog.write("Processing initSocket on: " + Thread.currentThread().getName());
                 createWebSocketConnection();
             }
         });
@@ -64,7 +67,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
      */
     protected abstract void createWebSocketConnection();
 
-   // protected abstract void hello();
+    // protected abstract void hello();
 
     @NonNull
     @Override
@@ -72,7 +75,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
         return Completable.fromCallable(() -> {
             if (getSocket() == null) {
                 return Completable.error(new IllegalStateException("Not connected"));
-                //throw new IllegalStateException("Not connected");
+                //  throw new IllegalStateException("Not connected");
             } else {
 //                DLog.write("Send STOMP message: " + stompMessage);
                 rawSend(stompMessage);

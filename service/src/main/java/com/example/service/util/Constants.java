@@ -17,11 +17,16 @@ public interface Constants {
     public static final String TOKEN_USER1 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MTg2fQ" +
             ".CRLEL9SHIqCQdkvBhAF0p-GL88VFgLKkrTLr-ra8BJ9mHbKgmak0iFYY5HofmxZyridjjrCv4aR4lv-1ywWXMQ";
 
+    public static final String TOKEN_USER2 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MzU2fQ" +
+            ".h26WcumCUm_v40sONC1Cwg2QQJw98cHrPe5zhOvG01LWLKbdWLU-U4cAjVi1oriJyD5rejzt-YDFrpnkTuiEjA";
+
     public static final String TOKEN_USER3 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjMiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NjM1ODkzfQ" +
             ".zLyB7JbD6Vd0cUCOQ-b6_1SW4sTkNUIpGjQ5e7j-o9Ic2M4ddNNNVAIbi2HWXh_IIN1mKRksDWmqxgVBu7ppMA";
 
-    public static final String TOKEN_USER2 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU3NTQ4MzU2fQ" +
-            ".h26WcumCUm_v40sONC1Cwg2QQJw98cHrPe5zhOvG01LWLKbdWLU-U4cAjVi1oriJyD5rejzt-YDFrpnkTuiEjA";
+    public static final String TOKEN_USER4="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU4NDExMTIzfQ" +
+            ".u4DNea55ISR4aCZ1KUfJCXIxCHYL5rKQEzJ2c7CCbjh5yAmeX76xUQKmROAsIZKzKGtSkoz6bfA8d19KKjbUaw";
+
+    public static final String TOKEN_USER5 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNTU4NDExMzIwfQ.7rqZRYzoxqaPvDSmbyT1dPbmjkD4wWJDthLQZYeV0hsaGVMA8TWFpUiJFOwInUT2yDgWB3915DofwrYJ1kgSrQ";
 
     public static final  String TOKEN_USER300 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjMwMCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE1NTc2MzY2ODJ9" +
             ".ZZ9GX5oPUe4cXG-JRnP69K3o84Zj71WmO0ZVBD7uFWz6Xu_Jbvkdcfp8rRby-X96z9PVTid4omZiMEJfrX9WtA";
@@ -38,8 +43,11 @@ public interface Constants {
     public static final String LOCAL_SEND_2 = "/app/hello-msg2";
 
     public static final String NAME_TESTUSER1 = "testuser1";
-    public static final String NAME_TESTUSER3 = "testuser3";
     public static final String NAME_TESTUSER2 = "testuser2";
+    public static final String NAME_TESTUSER3 = "testuser3";
+    public static final String NAME_TESTUSER4 = "testuser4";
+    public static final String NAME_TESTUSER5 = "testuser5";
+
     public static final String NAME_TESTUSER300 = "testuser300";
     public static final String NAME_TESTUSER399 = "testuser399";
 }

@@ -2,7 +2,7 @@
 buildscript {
 
     apply from: 'versions.gradle'
-    ext.android_plugin_version = '3.4.0-rc03'
+    ext.android_plugin_version = '3.4.0'
 
     addRepos(repositories)
 

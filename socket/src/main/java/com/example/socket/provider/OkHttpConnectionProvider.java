@@ -1,5 +1,7 @@
 package com.example.socket.provider;
 
+import android.os.Looper;
+
 import com.example.dlog.DLog;
 import com.example.socket.dto.LifecycleEvent;
 
@@ -16,7 +18,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.ByteString;
 
 public class OkHttpConnectionProvider extends AbstractConnectionProvider {
@@ -50,6 +51,7 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
     @Override
     protected void createWebSocketConnection() {
         DLog.write("createWebSocketConnection");
+        DLog.write("Processing createWebSocketConnection on: " + Thread.currentThread().getName());
         Request.Builder requestBuilder = new Request.Builder()
                 .url(mUri);
 
@@ -59,11 +61,9 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
                 new WebSocketListener() {
                     @Override
                     public void onOpen(WebSocket webSocket, @NonNull Response response) {
-                        DLog.write("onOpen");
+                        DLog.write("Processing createWebSocketConnection onOpen: " + Thread.currentThread().getName());
                         LifecycleEvent openEvent = new LifecycleEvent(LifecycleEvent.Type.OPENED);
-
                         TreeMap<String, String> headersAsMap = headersAsMap(response);
-
                         openEvent.setHandshakeResponseHeaders(headersAsMap);
                         emitLifecycleEvent(openEvent);
                     }
@@ -93,11 +93,10 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
                             DLog.write("onFailure code=" + response.code() + " " + response.message());
                             emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.UNAUTHORIZED, new Exception(t)));
                         } else {
-                           emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
+                            emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
                         }
                         openSocket = null;
                         emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
-
                     }
 
                     @Override
