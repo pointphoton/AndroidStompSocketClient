@@ -99,9 +99,9 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
 
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER300, NAME_TESTUSER3);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER300, "testx");
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER3, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + "testx", jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");

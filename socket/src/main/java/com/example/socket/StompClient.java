@@ -13,7 +13,6 @@ import com.example.socket.provider.ConnectionProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,8 +29,8 @@ import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 public class StompClient {
-    public static final String SUPPORTED_VERSIONS = "1.1,1.2";
-    public static final String DEFAULT_ACK = "auto";
+    private static final String SUPPORTED_VERSIONS = "1.1,1.2";
+    private static final String DEFAULT_ACK = "auto";
 
     private final ConnectionProvider connectionProvider;
     private ConcurrentHashMap<String, String> topics;
@@ -111,7 +110,6 @@ public class StompClient {
                     switch (lifecycleEvent.getType()) {
                         case OPENED:
                             DLog.write("Socket Opened");
-
                             List<StompHeader> headers = new ArrayList<>();
                             headers.add(new StompHeader(StompHeader.VERSION, SUPPORTED_VERSIONS));
                             headers.add(new StompHeader(StompHeader.HEART_BEAT,
@@ -129,7 +127,6 @@ public class StompClient {
                             DLog.write("Socket closed");
                             disconnect();
                             break;
-
                         case ERROR:
                             DLog.write("Socket closed with error");
                             lifecyclePublishSubject.onNext(lifecycleEvent);
@@ -146,7 +143,6 @@ public class StompClient {
                 .subscribe(stompMessage -> {
                     getConnectionStream().onNext(true);
                 });
-
     }
 
     synchronized private BehaviorSubject<Boolean> getConnectionStream() {
