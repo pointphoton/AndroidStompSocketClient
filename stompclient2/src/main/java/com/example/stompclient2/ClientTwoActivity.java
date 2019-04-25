@@ -104,6 +104,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
 
                     }
                 });
+
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
         mStompClient.connect();

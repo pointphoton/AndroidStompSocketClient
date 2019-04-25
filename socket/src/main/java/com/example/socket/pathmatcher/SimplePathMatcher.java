@@ -6,11 +6,11 @@ import com.example.socket.dto.StompMessage;
 
 public class SimplePathMatcher implements PathMatcher {
 
-    @Override
-    public boolean matches(String path, StompMessage msg) {
+@Override
+public boolean matches(String path, StompMessage msg) {
         DLog.write("path= " + path + " msg= " + msg);
         String dest = msg.findHeader(StompHeader.DESTINATION);
         if (dest == null) return false;
         else return path.equals(dest);
-    }
-}
+        }
+        }

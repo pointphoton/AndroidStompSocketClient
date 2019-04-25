@@ -133,6 +133,24 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Geek1 geeks1 = new Geek1();
+        Geek2 geeks2 = new Geek2(geeks1);
+        Geek3 geeks3 = new Geek3(geeks1);
+        Thread t1 = new Thread(geeks1, "Thread-1");
+        Thread t2 = new Thread(geeks2, "Thread-2");
+        Thread t3 = new Thread(geeks3, "Thread-3");
+        t1.start();
+        t2.start();
+        try{
+        Thread.sleep(100);}catch (Exception e){
+
+        }
+        t3.start();
+    }
+
+    @Override
     protected void onDestroy() {
         mStompClient.disconnect();
         if (compositeDisposable != null) compositeDisposable.dispose();
