@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     private StompClient mStompClient;
     private ActivityMainBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER14;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 });
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect();
+        mStompClient.connect(TOKEN_USER14);
 
 
     }

@@ -54,11 +54,11 @@ public class WebSocketsConnectionProvider extends AbstractConnectionProvider {
     }
 
     @Override
-    protected void createWebSocketConnection() {
+    protected void createWebSocketConnection(String userToken) {
         if (haveConnection)
             throw new IllegalStateException("Already have connection to web socket");
 
-        mWebSocketClient = new WebSocketClient(URI.create(mUri), new Draft_6455(), mConnectHttpHeaders, 0) {
+        mWebSocketClient = new WebSocketClient(URI.create(mUri+(userToken != null ? userToken : "")), new Draft_6455(), mConnectHttpHeaders, 0) {
 
             @Override
             public void onWebsocketHandshakeReceivedAsClient(WebSocket conn, ClientHandshake request, @NonNull ServerHandshake response) throws InvalidDataException {

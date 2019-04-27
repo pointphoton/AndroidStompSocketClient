@@ -49,11 +49,11 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
     }
 
     @Override
-    protected void createWebSocketConnection() {
+    protected void createWebSocketConnection(String userToken) {
         DLog.write("createWebSocketConnection");
         DLog.write("Processing createWebSocketConnection on: " + Thread.currentThread().getName());
         Request.Builder requestBuilder = new Request.Builder()
-                .url(mUri);
+                .url(mUri + (userToken != null ? userToken : ""));
 
         addConnectionHeadersToBuilder(requestBuilder, mConnectHttpHeaders);
 

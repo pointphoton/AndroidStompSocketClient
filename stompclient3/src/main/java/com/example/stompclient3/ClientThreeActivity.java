@@ -35,7 +35,7 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
     private StompClient mStompClient;
     private ActivityClientThreeBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER300;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT ;
 
 
     @Override
@@ -88,7 +88,7 @@ public class ClientThreeActivity extends AppCompatActivity implements ClickListe
     public void onConnect(View view) {
         DLog.write();
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect();
+        mStompClient.connect(TOKEN_USER300);
     }
 
     public void onDisconnect(View view) {

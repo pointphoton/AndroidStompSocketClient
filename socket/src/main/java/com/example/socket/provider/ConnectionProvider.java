@@ -11,7 +11,7 @@ public interface  ConnectionProvider {
     /**
      * Subscribe this for receive stomp messages
      */
-    Observable<String> messages();
+    Observable<String> connect(String userToken);
 
     /**
      * Sending stomp messages via you ConnectionProvider.

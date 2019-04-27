@@ -38,7 +38,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
     private StompClient mStompClient;
     private ClientTwoBinding mBinding;
     private CompositeDisposable compositeDisposable;
-    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT + TOKEN_USER15;
+    private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
 
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect();
+        mStompClient.connect(TOKEN_USER15);
 
 
     }

@@ -27,9 +27,9 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
 
     @NonNull
     @Override
-    public Observable<String> messages() {
-        DLog.write();
-        return messagesStream.startWith(initSocket().toObservable());
+    public Observable<String> connect(String userToken) {
+        DLog.write("+ MDENE DENE DENE ");
+        return messagesStream.startWith(initSocket(userToken).toObservable());
     }
 
     /**
@@ -48,14 +48,14 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
                 .fromAction(this::rawDisconnect);
     }
 
-    private Completable initSocket() {
+    private Completable initSocket(String userToken) {
         DLog.write();
         //return Completable.fromAction(this::createWebSocketConnection);
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
                 DLog.write("Processing initSocket on: " + Thread.currentThread().getName());
-                createWebSocketConnection();
+                createWebSocketConnection(userToken);
             }
         });
     }
@@ -65,7 +65,7 @@ public abstract class AbstractConnectionProvider implements ConnectionProvider {
      * <p>
      * See implementations in OkHttpConnectionProvider and WebSocketsConnectionProvider.
      */
-    protected abstract void createWebSocketConnection();
+    protected abstract void createWebSocketConnection(String userToken);
 
     // protected abstract void hello();
 

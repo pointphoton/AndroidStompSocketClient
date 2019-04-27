@@ -1,6 +1,7 @@
 package com.example.socket;
 
 import android.annotation.SuppressLint;
+import android.os.Debug;
 
 import com.example.dlog.DLog;
 import com.example.socket.dto.LifecycleEvent;
@@ -86,7 +87,14 @@ public class StompClient {
      * Connect without reconnect if connected
      */
     public void connect() {
-        connect(null);
+        connect(null, null);
+    }
+
+    /**
+     * Connect without reconnect if connected
+     */
+    public void connect(String userToken) {
+        connect(userToken, null);
     }
 
     /**
@@ -94,7 +102,7 @@ public class StompClient {
      *
      * @param _headers HTTP headers to send in the INITIAL REQUEST, i.e. during the protocol upgrade
      */
-    public void connect(@Nullable List<StompHeader> _headers) {
+    public void connect(String userToken, @Nullable List<StompHeader> _headers) {
 
         DLog.write("Connect");
 
@@ -134,7 +142,10 @@ public class StompClient {
                     }
                 });
 
-        messagesDisposable = connectionProvider.messages()
+        messagesDisposable = connectionProvider.connect(userToken)
+                .doOnNext(s -> {
+                    DLog.write("LOG message " + s);
+                })
                 .subscribeOn(Schedulers.io())
                 .map(StompMessage::from)
                 .filter(heartBeatTask::consumeHeartBeat)
@@ -200,7 +211,14 @@ public class StompClient {
     @SuppressLint("CheckResult")
     public void reconnect() {
         disconnectCompletable()
-                .subscribe(() -> connect(headers),
+                .subscribe(() -> connect(null,headers),
+                        e -> DLog.write("Disconnect error", e));
+    }
+
+    @SuppressLint("CheckResult")
+    public void reconnect(String userToken) {
+        disconnectCompletable()
+                .subscribe(() -> connect(userToken, headers),
                         e -> DLog.write("Disconnect error", e));
     }
 
