@@ -1,6 +1,5 @@
 package com.example.socket.provider;
 
-import android.os.Looper;
 
 import com.example.dlog.DLog;
 import com.example.socket.dto.LifecycleEvent;
