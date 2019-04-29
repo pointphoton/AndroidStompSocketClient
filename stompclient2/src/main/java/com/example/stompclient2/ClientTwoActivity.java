@@ -88,11 +88,10 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                     }
                     String json = topicMessage.getPayload();
                     ReceivedMessage rm = MixUtil.getGson().fromJson(json, ReceivedMessage.class);
-                    if (rm.isSuccess() && rm.getErrorCode() == 0) {
+                    if (rm.isSuccess() && rm.getErrorCode() == 0 && rm.getSourceusername()!=null) {
                         //todo should add to which user we are speaking
                         ReadInfo ri = new ReadInfo(rm.getMessageUuid(), null);
                         String jsonModel = MixUtil.getGson().toJson(ri, ReadInfo.class);
-                        /*
                         compositeDisposable.add(mStompClient.send(DESTINATION_READ, jsonModel)
                                 .compose(applySchedulers())
                                 .subscribe(() -> {
@@ -100,7 +99,7 @@ public class ClientTwoActivity extends AppCompatActivity implements ClickListene
                                 }, throwable -> {
                                     DLog.write("Error send STOMP - READ message", throwable.getMessage());
 
-                                }));*/
+                                }));
 
                     }
                 });
