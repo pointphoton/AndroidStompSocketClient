@@ -3,12 +3,24 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/dlog" />
+            <option value="$PROJECT_DIR$/localspringclient" />
+            <option value="$PROJECT_DIR$/localspringclient2" />
+            <option value="$PROJECT_DIR$/service" />
+            <option value="$PROJECT_DIR$/slog" />
+            <option value="$PROJECT_DIR$/socket" />
+            <option value="$PROJECT_DIR$/stompclient2" />
+            <option value="$PROJECT_DIR$/stompclient3" />
+          </set>
+        </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

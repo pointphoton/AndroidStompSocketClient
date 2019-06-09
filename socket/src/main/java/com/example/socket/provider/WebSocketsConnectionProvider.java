@@ -107,7 +107,7 @@ public class WebSocketsConnectionProvider extends AbstractConnectionProvider {
                 SSLContext sc = SSLContext.getInstance("TLS");
                 sc.init(null, null, null);
                 SSLSocketFactory factory = sc.getSocketFactory();
-                mWebSocketClient.setSocket(factory.createSocket());
+                mWebSocketClient.setSocketFactory(factory);
             } catch (Exception e) {
                 e.printStackTrace();
             }

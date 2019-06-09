@@ -19,7 +19,6 @@ import com.example.service.model.SendMessageVm;
 import com.example.service.util.MixUtil;
 import com.example.socket.Stomp;
 import com.example.socket.StompClient;
-import com.example.socket.dto.StompHeader;
 
 import java.util.Date;
 
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     private CompositeDisposable compositeDisposable;
     private static String mUri = HOST_LOCAL + ":" + SERVER_PORT + ENDPOINT;
     private String mTargetUsername;
+    private String mSourceUsername;
+    private String mUserToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 this, R.layout.activity_main);
         mBinding.setHandler(this);
         mTargetUsername = NAME_TESTUSER15;
+        mSourceUsername = NAME_TESTUSER14;
+        mUserToken = TOKEN_USER14;
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
         Disposable dispLifecycle = mStompClient.lifecycle()
@@ -175,11 +178,16 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 .subscribe(topicMessage -> {
                     DLog.write("StompCommand= " + topicMessage.getStompCommand());
                     DLog.write("Received= " + topicMessage.getPayload());
+                    /*
                     for (StompHeader sh : topicMessage.getStompHeaders()) {
                         DLog.write("HEADERS= ", sh.getKey() + " - " + sh.getValue());
-                    }
+                    }*/
                     String json = topicMessage.getPayload();
                     ReceivedMessage rm = MixUtil.getGson().fromJson(json, ReceivedMessage.class);
+                    if (rm.getSourceusername() == null) { // the callbacks of the our messages
+                        DLog.write("own message callback");
+                        return;
+                    }
                     if (rm.isSuccess() && rm.getErrorCode() == 0 && rm.getSourceusername().equals(mTargetUsername)) {
                         //todo should add to which user we are speaking
                         ReadInfo ri = new ReadInfo(rm.getMessageUuid(), null);
@@ -190,20 +198,16 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                                     DLog.write("STOMP - READ message send successfully");
                                 }, throwable -> {
                                     DLog.write("Error send STOMP - READ message", throwable.getMessage());
-
                                 }));
 
                     }
-                    if (rm.getSourceusername() == null) { // the callbacks of the our messages
-                        DLog.write();
-                    }
                     if (rm.getSourceusername() != null && !rm.getSourceusername().equals(mTargetUsername)) {
-                        DLog.write();
+                        DLog.write("message from other user :" + rm.getSourceusername());
                     }
                 });
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect(TOKEN_USER14); //todo open connection after take history list
+        mStompClient.connect(mUserToken); //todo open connection after take history list
 
 
     }
@@ -218,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + NAME_TESTUSER14, mTargetUsername);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + mSourceUsername, mTargetUsername);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
         compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + mTargetUsername, jsonModel)
                 .compose(applySchedulers())

@@ -12,7 +12,7 @@ public class MixUtil {
     private final static Gson sGson;
 
     static {
-        sTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.Z", Locale.getDefault());
+        sTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS.Z", Locale.getDefault());
         sGson = new GsonBuilder().setLenient().disableHtmlEscaping().create();
     }
 
