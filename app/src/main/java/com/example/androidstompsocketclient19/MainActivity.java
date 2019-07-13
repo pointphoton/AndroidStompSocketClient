@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 });
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect(mUserToken); 
+        mStompClient.connect(mUserToken);
     }
 
     @Override

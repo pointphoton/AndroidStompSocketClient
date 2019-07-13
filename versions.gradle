@@ -2,22 +2,22 @@ ext.deps = [:]
 def versions = [:]
 
 //android views & support
-versions.annotation = "1.0.2"
-versions.appcompat = "1.0.2"
-versions.constraint_layout = "1.1.3"
+versions.annotation = "1.1.0"
+versions.appcompat = "1.1.0-rc01"
+versions.constraint_layout = "2.0.0-beta2"
 
 //third parties
-versions.retrofit = "2.5.0"
+versions.retrofit = "2.6.0"
 versions.gson = "2.8.5"
-versions.okhttp3 = "3.12.2"
-versions.rxjava2 = "2.2.8"
+versions.okhttp3 = "3.12.3"
+versions.rxjava2 = "2.2.10"
 versions.rx_android = "2.1.1"
 versions.javaWebSocket = "1.4.0"
 
 //test
-versions.junit = "4.13-beta-2"
-versions.robolectric = "4.2.1"
-versions.test_runner= "1.0.2"
+versions.junit = "4.13-beta-3"
+versions.robolectric = "4.3"
+versions.test_runner= "1.2.0"
 versions.expresso = "3.1.1"
 
 def support = [:]
