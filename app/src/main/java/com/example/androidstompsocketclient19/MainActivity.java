@@ -1,14 +1,7 @@
 package com.example.androidstompsocketclient19;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import io.reactivex.CompletableTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.View;
 
 import com.example.androidstompsocketclient19.databinding.ActivityMainBinding;
@@ -22,14 +15,24 @@ import com.example.socket.StompClient;
 
 import java.util.Date;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import io.reactivex.CompletableTransformer;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+
 import static com.example.service.util.Constants.DESTINATION_CHAT;
 import static com.example.service.util.Constants.DESTINATION_READ;
 import static com.example.service.util.Constants.ENDPOINT;
 import static com.example.service.util.Constants.HOST_LOCAL;
-import static com.example.service.util.Constants.NAME_TESTUSER14;
-import static com.example.service.util.Constants.NAME_TESTUSER15;
+import static com.example.service.util.Constants.NAME_TESTUSER;
 import static com.example.service.util.Constants.SERVER_PORT;
-import static com.example.service.util.Constants.TOKEN_USER14;
+import static com.example.service.util.Constants.TOKEN_USER200;
 
 public class MainActivity extends AppCompatActivity implements ClickListener {
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     private String mTargetUsername;
     private String mSourceUsername;
     private String mUserToken;
+    private int counter = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +51,29 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_main);
         mBinding.setHandler(this);
-        mTargetUsername = NAME_TESTUSER15;
-        mSourceUsername = NAME_TESTUSER14;
-        mUserToken = TOKEN_USER14;
+        mTargetUsername = NAME_TESTUSER + counter;
+        mSourceUsername = NAME_TESTUSER + 200;
+        mUserToken = TOKEN_USER200;
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, mUri);
         resetSubscriptions();
         Disposable dispLifecycle = mStompClient.lifecycle()
-                // .subscribeOn(Schedulers.io()) //todo check
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io()) //todo check
+                .filter(lifecycleEvent -> {
+                    DLog.write("filter subscribeOn : " + Thread.currentThread().getName());
+                    lifecycleEvent.getMessage();
+                    return true;
+                })
                 .doOnError(ex -> {
                     DLog.write(ex.getMessage());
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lifecycleEvent -> {
                     DLog.write("subscribeOn : " + Thread.currentThread().getName());
                     switch (lifecycleEvent.getType()) {
                         case OPENED:
                             DLog.write("Stomp connection opened");
                             mBinding.txtConnectionStatus.setText("Connected");
+
                             /*
                             TreeMap<String, String> treeMap = lifecycleEvent.getHandshakeResponseHeaders();
                             for (Map.Entry<String, String> entry : treeMap.entrySet()) {
@@ -138,8 +148,27 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                     public void onError(@NonNull Throwable e) {
                     }
                 });*/
+        Observable.fromCallable(this::genString).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(txt -> {
+            DLog.write("in subscribeOn : " + Thread.currentThread().getName());
+            DLog.write("txt " + txt[0]);
+        });
+
+        Single.fromCallable(this::del).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(txt -> {
+            // DLog.write("in subscribeOn : " + Thread.currentThread().getName());
+            // DLog.write("txt " + txt[0]);
+        });
+
     }
 
+    String[] genString() {
+        DLog.write("genString subscribeOn : " + Thread.currentThread().getName());
+        return new String[]{"hello world!"};
+    }
+    String del() {
+        return "";
+    }
+
+    String s="";
     @Override
     protected void onStart() {
         super.onStart();
@@ -207,9 +236,7 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
                 });
         compositeDisposable.add(dispTopic);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
-        mStompClient.connect(mUserToken); //todo open connection after take history list
-
-
+        mStompClient.connect(mUserToken); 
     }
 
     @Override
@@ -222,13 +249,14 @@ public class MainActivity extends AppCompatActivity implements ClickListener {
     @Override
     public void onSendMessage(View view) {
         DLog.write();
-        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + mSourceUsername, mTargetUsername);
+        SendMessageVm messageVm = new SendMessageVm(MixUtil.getTimeFormat().format(new Date()) + " FROM " + mSourceUsername, NAME_TESTUSER + counter);
         String jsonModel = MixUtil.getGson().toJson(messageVm, SendMessageVm.class);
-        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + mTargetUsername, jsonModel)
+        compositeDisposable.add(mStompClient.send(DESTINATION_CHAT + NAME_TESTUSER + counter, jsonModel)
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     DLog.write("STOMP message send successfully");
                     mBinding.txtMessage.setText("STOMP message send successfully");
+                    counter++;
                 }, throwable -> {
                     DLog.write("Error send STOMP message", throwable.getMessage());
                     mBinding.txtMessage.setText("Error send STOMP message");

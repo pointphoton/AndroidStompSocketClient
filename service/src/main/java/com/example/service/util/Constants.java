@@ -26,6 +26,8 @@ public interface Constants {
 
     public static final String TOKEN_USER15 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjE1IiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTU1ODk1NjExMn0.RAegyGeBfBcaGpCDaiQ_iOs1QC9AHn63vD88ICOsosD5HhDzKm70oCOdf2YtFiaxW6BBezF3o0V6LdWOkV5bSw";
 
+    public static final  String TOKEN_USER200 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjIwMCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE1NjQ1Njk3OTN9.5zuBOTZKXDS2_6DTqdKH1kqvQuzNzzNycFFlYRyRLNAteysz-JC3YYJRFXJ7ll2t7eILQe6mNHKwzvJ_Z4ARtQ";
+
     public static final  String TOKEN_USER300 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjMwMCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE1NjAyNTc4Mjh9.EeUe9y_AsxUP5fDddk-NMk6OuqFeYQ0UCgL6a57dJTvmDTdKHyZkicy1k9XFdd-QFyTM-BdaURE7oi3UxlYJaA";
 
     public static final String TOKEN_USER399 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjM5OSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE1NjAyNTc4NjF9.3Rot8zRsfj-dTP0g9DaHfs-rZMsn0_1xBOMmrH_RRrXfh48dLbOgD9OzruXnm4AC8s2Pw-E0ZAnkGpxIR1v_jg";
@@ -45,6 +47,8 @@ public interface Constants {
 
     public static final String NAME_TESTUSER14 = "testuser14";
     public static final String NAME_TESTUSER15 = "testuser15";
+
+    public static final String NAME_TESTUSER = "testuser";
 
     public static final String NAME_TESTUSER300 = "testuser300";
     public static final String NAME_TESTUSER399 = "testuser399";
